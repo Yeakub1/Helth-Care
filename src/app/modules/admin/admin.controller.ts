@@ -5,7 +5,7 @@ import { adminFiltarableFields } from "./admin.constant";
 
 const getAllFormDB = async (req: Request, res: Response) => {
   const filter = pick(req.query, adminFiltarableFields);
-  const options = pick(req.query, ["limit", "page"]);
+  const options = pick(req.query, ["limit", "page", "sortBy", "sortOrder"]);
 
   const result = await AdminServices.getAllFromDB(filter, options);
   try {
