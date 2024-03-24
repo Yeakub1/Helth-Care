@@ -1,11 +1,15 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { AdminServices } from "./admin.services";
 import pick from "../../../shared/paick";
 import { adminFiltarableFields } from "./admin.constant";
 import SendResponse from "../../../shared/sendResponse";
 import httpStatus from "http-status";
 
-const getAllFormDB = async (req: Request, res: Response) => {
+const getAllFormDB = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const filter = pick(req.query, adminFiltarableFields);
     const options = pick(req.query, ["limit", "page", "sortBy", "sortOrder"]);
@@ -18,15 +22,15 @@ const getAllFormDB = async (req: Request, res: Response) => {
       data: result.data,
     });
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: error?.name || "Data Does't match",
-      error: error,
-    });
+    next(error);
   }
 };
 
-const getByIdFormDB = async (req: Request, res: Response) => {
+const getByIdFormDB = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   const { id } = req.params;
   try {
     const result = await AdminServices.getByIdFormDB(id);
@@ -37,15 +41,15 @@ const getByIdFormDB = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: error?.name || "Something went wrong",
-      error: error,
-    });
+    next(error);
   }
 };
 
-const updateIntoDB = async (req: Request, res: Response) => {
+const updateIntoDB = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   const { id } = req.params;
   try {
     const result = await AdminServices.updateIntoDB(id, req.body);
@@ -56,15 +60,15 @@ const updateIntoDB = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: error?.name || "Something went wrong",
-      error: error,
-    });
+    next(error);
   }
 };
 
-const deleteFormDB = async (req: Request, res: Response) => {
+const deleteFormDB = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   const { id } = req.params;
   try {
     const result = await AdminServices.deleteFormDB(id);
@@ -76,15 +80,15 @@ const deleteFormDB = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: error?.name || "Something went wrong",
-      error: error,
-    });
+    next(error);
   }
 };
 
-const softDeleteFormDB = async (req: Request, res: Response) => {
+const softDeleteFormDB = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   const { id } = req.params;
   try {
     const result = await AdminServices.softDeleteFormDB(id);
@@ -95,11 +99,7 @@ const softDeleteFormDB = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: error?.name || "Something went wrong",
-      error: error,
-    });
+    next(error);
   }
 };
 
