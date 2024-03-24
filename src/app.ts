@@ -27,4 +27,14 @@ app.get("/", (req: Request, res: Response) => {
 
 app.use("/api/v1", router);
 app.use(globalErrorHandlear);
+app.use((req: Request, res: Response, next: NextFunction) => {
+  res.status(httpStatus.NOT_FOUND).json({
+    success: false,
+    message: "API NOT FOUND",
+    error: {
+      path: req.originalUrl,
+      message: "Your Request Path Not Found",
+    },
+  });
+});
 export default app;
