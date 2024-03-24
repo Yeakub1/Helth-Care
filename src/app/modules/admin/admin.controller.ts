@@ -2,13 +2,16 @@ import { Request, Response } from "express";
 import { AdminServices } from "./admin.services";
 import pick from "../../../shared/paick";
 import { adminFiltarableFields } from "./admin.constant";
+import SendResponse from "../../../shared/sendResponse";
+import httpStatus from "http-status";
 
 const getAllFormDB = async (req: Request, res: Response) => {
   try {
     const filter = pick(req.query, adminFiltarableFields);
     const options = pick(req.query, ["limit", "page", "sortBy", "sortOrder"]);
     const result = await AdminServices.getAllFromDB(filter, options);
-    res.status(200).json({
+    SendResponse(res, {
+      statusCode: httpStatus.OK,
       success: true,
       message: "Admin Data Fetched Successfully!",
       meta: result.meta,
@@ -27,10 +30,10 @@ const getByIdFormDB = async (req: Request, res: Response) => {
   const { id } = req.params;
   try {
     const result = await AdminServices.getByIdFormDB(id);
-    res.status(200).json({
+    SendResponse(res, {
+      statusCode: httpStatus.OK,
       success: true,
       message: "Admin Data Fetched By Id!",
-
       data: result,
     });
   } catch (error) {
@@ -46,10 +49,10 @@ const updateIntoDB = async (req: Request, res: Response) => {
   const { id } = req.params;
   try {
     const result = await AdminServices.updateIntoDB(id, req.body);
-    res.status(200).json({
+    SendResponse(res, {
+      statusCode: httpStatus.OK,
       success: true,
       message: "Admin Data Updated!",
-
       data: result,
     });
   } catch (error) {
@@ -65,10 +68,11 @@ const deleteFormDB = async (req: Request, res: Response) => {
   const { id } = req.params;
   try {
     const result = await AdminServices.deleteFormDB(id);
-    res.status(200).json({
+
+    SendResponse(res, {
+      statusCode: httpStatus.OK,
       success: true,
       message: "Admin Data Delete Successfuly!",
-
       data: result,
     });
   } catch (error) {
@@ -80,15 +84,14 @@ const deleteFormDB = async (req: Request, res: Response) => {
   }
 };
 
-
 const softDeleteFormDB = async (req: Request, res: Response) => {
   const { id } = req.params;
   try {
     const result = await AdminServices.softDeleteFormDB(id);
-    res.status(200).json({
+    SendResponse(res, {
+      statusCode: httpStatus.OK,
       success: true,
       message: "Admin Soft Data Delete Successfuly!",
-
       data: result,
     });
   } catch (error) {
@@ -105,5 +108,5 @@ export const AdminController = {
   getByIdFormDB,
   updateIntoDB,
   deleteFormDB,
-  softDeleteFormDB
+  softDeleteFormDB,
 };

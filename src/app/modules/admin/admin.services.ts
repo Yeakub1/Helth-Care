@@ -29,6 +29,10 @@ const getAllFromDB = async (params: any, options: any) => {
     });
   }
 
+  andCondition.push({
+    isDeleted: false,
+  });
+
   const whereConditon: Prisma.AdminWhereInput = { AND: andCondition };
 
   const result = await prisma.admin.findMany({
@@ -59,19 +63,24 @@ const getAllFromDB = async (params: any, options: any) => {
   };
 };
 
-const getByIdFormDB = async (id: string) => {
+const getByIdFormDB = async (id: string): Promise<Admin | null> => {
   const result = await prisma.admin.findUnique({
     where: {
       id,
+      isDeleted: false,
     },
   });
   return result;
 };
 
-const updateIntoDB = async (id: string, data: Partial<Admin>) => {
+const updateIntoDB = async (
+  id: string,
+  data: Partial<Admin>
+): Promise<Admin> => {
   await prisma.admin.findUniqueOrThrow({
     where: {
       id,
+      isDeleted: false,
     },
   });
 
@@ -85,7 +94,7 @@ const updateIntoDB = async (id: string, data: Partial<Admin>) => {
   return result;
 };
 
-const deleteFormDB = async (id: string) => {
+const deleteFormDB = async (id: string): Promise<Admin | null> => {
   await prisma.admin.findUniqueOrThrow({
     where: {
       id,
@@ -98,7 +107,7 @@ const deleteFormDB = async (id: string) => {
         id,
       },
     });
-    const userDeletedData = await transationClient.user.delete({
+    await transationClient.user.delete({
       where: {
         email: adminDeletedData.email,
       },
@@ -108,10 +117,11 @@ const deleteFormDB = async (id: string) => {
   return result;
 };
 
-const softDeleteFormDB = async (id: string) => {
+const softDeleteFormDB = async (id: string): Promise<Admin | null> => {
   await prisma.admin.findUniqueOrThrow({
     where: {
       id,
+      isDeleted: false,
     },
   });
 
@@ -124,13 +134,13 @@ const softDeleteFormDB = async (id: string) => {
         isDeleted: true,
       },
     });
-    const userDeletedData = await transationClient.user.update({
+    await transationClient.user.update({
       where: {
         email: adminDeletedData.email,
       },
-     data:{
-      status: UserStatus.DELETED
-     }
+      data: {
+        status: UserStatus.DELETED,
+      },
     });
     return adminDeletedData;
   });
