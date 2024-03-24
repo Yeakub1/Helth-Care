@@ -6,5 +6,6 @@ const router = express.Router();
 
 router.get('/', AdminController.getAllFormDB);
 router.get('/:id', AdminController.getByIdFormDB);
+router.patch('/:id', AdminController.updateIntoDB);
 
 export const AdminRouter = router;
