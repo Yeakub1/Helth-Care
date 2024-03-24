@@ -80,9 +80,30 @@ const deleteFormDB = async (req: Request, res: Response) => {
   }
 };
 
+
+const softDeleteFormDB = async (req: Request, res: Response) => {
+  const { id } = req.params;
+  try {
+    const result = await AdminServices.softDeleteFormDB(id);
+    res.status(200).json({
+      success: true,
+      message: "Admin Soft Data Delete Successfuly!",
+
+      data: result,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error?.name || "Something went wrong",
+      error: error,
+    });
+  }
+};
+
 export const AdminController = {
   getAllFormDB,
   getByIdFormDB,
   updateIntoDB,
   deleteFormDB,
+  softDeleteFormDB
 };
