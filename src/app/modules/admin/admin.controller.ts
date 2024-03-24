@@ -44,25 +44,45 @@ const getByIdFormDB = async (req: Request, res: Response) => {
 
 const updateIntoDB = async (req: Request, res: Response) => {
   const { id } = req.params;
-   try {
-     const result = await AdminServices.updateIntoDB(id, req.body);
-     res.status(200).json({
-       success: true,
-       message: "Admin Data Updated!",
+  try {
+    const result = await AdminServices.updateIntoDB(id, req.body);
+    res.status(200).json({
+      success: true,
+      message: "Admin Data Updated!",
 
-       data: result,
-     });
-   } catch (error) {
-     res.status(500).json({
-       success: false,
-       message: error?.name || "Something went wrong",
-       error: error,
-     });
-   }
+      data: result,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error?.name || "Something went wrong",
+      error: error,
+    });
+  }
+};
+
+const deleteFormDB = async (req: Request, res: Response) => {
+  const { id } = req.params;
+  try {
+    const result = await AdminServices.deleteFormDB(id);
+    res.status(200).json({
+      success: true,
+      message: "Admin Data Delete Successfuly!",
+
+      data: result,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error?.name || "Something went wrong",
+      error: error,
+    });
+  }
 };
 
 export const AdminController = {
   getAllFormDB,
   getByIdFormDB,
   updateIntoDB,
+  deleteFormDB,
 };

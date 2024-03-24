@@ -69,13 +69,36 @@ const getByIdFormDB = async (id: string) => {
 };
 
 const updateIntoDB = async (id: string, data: Partial<Admin>) => {
-  const result = await prisma.admin.update({
+  await prisma.admin.findUniqueOrThrow({
     where: {
-      id
+      id,
     },
-    data
   });
 
+  const result = await prisma.admin.update({
+    where: {
+      id,
+    },
+    data,
+  });
+
+  return result;
+};
+
+const deleteFormDB = async (id: string) => {
+  const result = await prisma.$transaction(async (transationClient) => {
+    const adminDeletedData = await transationClient.admin.delete({
+      where: {
+        id
+      }
+    })
+    const userDeletedData = await transationClient.user.delete({
+      where: {
+        email: adminDeletedData.email
+      }
+    })
+    return adminDeletedData
+  });
   return result
 };
 
@@ -83,4 +106,5 @@ export const AdminServices = {
   getAllFromDB,
   getByIdFormDB,
   updateIntoDB,
+  deleteFormDB,
 };
