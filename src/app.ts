@@ -6,9 +6,9 @@ import express, {
   Response,
   urlencoded,
 } from "express";
-import router from "./app/routes";
 import httpStatus from "http-status";
-import globalErrorHandlear from "./app/middlewares/globalerrorhandlear";
+import router from "./app/routes";
+import globalErrorHandlear from "./app/middlewares/globalErrorHandlear";
 
 const app: Application = express();
 app.use(cors());
