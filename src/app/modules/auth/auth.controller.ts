@@ -19,11 +19,29 @@ const loginUser = catchAsync(async (req: Request, res: Response) => {
     message: "User login successfuly!",
     data: {
       accessToken: result.accessToken,
-      needPasswordChange: result.needPasswordChange
+      needPasswordChange: result.needPasswordChange,
     },
+  });
+});
+
+const refreshTokens = catchAsync(async (req: Request, res: Response) => {
+  console.log(req.cookies);
+  const { refreshToken } = req.cookies;
+  const result = await authServices.refreshToken(refreshToken);
+
+  SendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "User login successfuly!",
+    data: result,
+    // data: {
+    //   accessToken: result.accessToken,
+    //   needPasswordChange: result.needPasswordChange
+    // },
   });
 });
 
 export const authController = {
   loginUser,
+  refreshTokens
 };

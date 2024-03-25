@@ -7,11 +7,14 @@ import express, {
   urlencoded,
 } from "express";
 import httpStatus from "http-status";
+import cookieParser from "cookie-parser";
 import router from "./app/routes";
 import globalErrorHandlear from "./app/middlewares/globalErrorHandlear";
 
 const app: Application = express();
 app.use(cors());
+app.use(cookieParser());
+
 app.use(express.json());
 app.use(
   urlencoded({
