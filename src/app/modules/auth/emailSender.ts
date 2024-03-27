@@ -19,11 +19,8 @@ const emailSender = async (email: string, html: string) => {
     from: '"PH Health Care" <innocentyeakub@gmail.com>', // sender address
     to: email, // list of receivers
     subject: "Reset Password Link", // Subject line
-    //text: "Hello world?", // plain text body
     html, // html body
   });
-
-  //console.log("Message sent: %s", info.messageId);
 };
 
 export default emailSender;
