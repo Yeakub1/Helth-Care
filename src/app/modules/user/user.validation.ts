@@ -1,4 +1,4 @@
-import { Gender } from "@prisma/client";
+import { Gender, UserStatus } from "@prisma/client";
 import { z } from "zod";
 
 const createAdmin = z.object({
@@ -53,7 +53,35 @@ const createDoctor = z.object({
   }),
 });
 
+const createPatient = z.object({
+  password: z.string(),
+  patient: z.object({
+    email: z
+      .string({
+        required_error: "Email is required!",
+      })
+      .email(),
+    name: z.string({
+      required_error: "Name is required!",
+    }),
+    contactNumber: z.string({
+      required_error: "Contact number is required!",
+    }),
+    address: z.string({
+      required_error: "Address is required",
+    }),
+  }),
+});
+
+const updateStatus = z.object({
+  body: z.object({
+    status: z.enum([UserStatus.ACTIVE, UserStatus.BLOCK, UserStatus.DELETED]),
+  }),
+});
+
 export const userValidation = {
   createAdmin,
   createDoctor,
+  createPatient,
+  updateStatus,
 };
