@@ -1,4 +1,11 @@
-import { Admin, Doctor, Patient, Prisma, UserRole } from "@prisma/client";
+import {
+  Admin,
+  Doctor,
+  Patient,
+  Prisma,
+  UserRole,
+  UserStatus,
+} from "@prisma/client";
 import * as bcrypt from "bcrypt";
 import { fileUploder } from "../../../helpers/fileUploder";
 import prisma from "../../../shared/prism";
@@ -181,6 +188,7 @@ const getMyProfile = async (user) => {
   const userInfo = await prisma.user.findUniqueOrThrow({
     where: {
       email: user.email,
+      status: UserStatus.ACTIVE,
     },
     select: {
       id: true,
@@ -220,6 +228,53 @@ const getMyProfile = async (user) => {
   return { ...userInfo, ...profielInfo };
 };
 
+const updateMyProfile = async (user: any, req: Request) => {
+  const userInfo = await prisma.user.findUniqueOrThrow({
+    where: {
+      email: user.email,
+      status: UserStatus.ACTIVE,
+    },
+  });
+
+  const file = req.file as IFile;
+  if (file) {
+    const updateToCloudinary = await fileUploder.uploadToCloudinary(file);
+    req.body.profilePhoto=updateToCloudinary?.secure_url
+  }
+
+  let profielInfo;
+  if (userInfo.role === UserRole.SUPER_ADMIN) {
+    profielInfo = await prisma.admin.update({
+      where: {
+        email: userInfo.email,
+      },
+      data: req.body,
+    });
+  } else if (userInfo.role === UserRole.ADMIN) {
+    profielInfo = await prisma.admin.update({
+      where: {
+        email: userInfo.email,
+      },
+      data: req.body,
+    });
+  } else if (userInfo.role === UserRole.DOCTOR) {
+    profielInfo = await prisma.doctor.update({
+      where: {
+        email: userInfo.email,
+      },
+      data: req.body,
+    });
+  } else if (userInfo.role === UserRole.PATIENT) {
+    profielInfo = await prisma.patient.update({
+      where: {
+        email: userInfo.email,
+      },
+      data: req.body,
+    });
+  }
+  return { ...profielInfo };
+};
+
 export const userServices = {
   creatAdmin,
   createDoctor,
@@ -227,4 +282,5 @@ export const userServices = {
   getAllFromDB,
   changeProfileStatus,
   getMyProfile,
+  updateMyProfile,
 };
