@@ -26,7 +26,6 @@ const createDoctor = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-
 const createPatient = catchAsync(async (req: Request, res: Response) => {
   const result = await userServices.createPatient(req);
   SendResponse(res, {
@@ -63,10 +62,23 @@ const changeProfileStatus = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const getMyProfile = catchAsync(async (req: Request, res: Response) => {
+  const user = req.user;
+  const result = await userServices.getMyProfile(user);
+
+  SendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "My Profile data fatched!",
+    data: result,
+  });
+});
+
 export const userController = {
   creatAdmin,
   createDoctor,
   createPatient,
   getAllFormDB,
-  changeProfileStatus
+  changeProfileStatus,
+  getMyProfile,
 };
