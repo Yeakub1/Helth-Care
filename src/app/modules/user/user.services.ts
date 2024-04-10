@@ -14,6 +14,7 @@ import { Request } from "express";
 import { IPaginationOptions } from "../../interfaces/paginations";
 import { paginatinHelpers } from "../../../helpers/paginatinHelpers";
 import { userSearchAbleFields } from "./user.constant";
+import { IAuthUser } from "../../interfaces/common";
 
 const creatAdmin = async (req: Request): Promise<Admin> => {
   const file = req.file as IFile;
@@ -184,10 +185,10 @@ const changeProfileStatus = async (id: string, status: UserRole) => {
   return updateUserStatus;
 };
 
-const getMyProfile = async (user) => {
+const getMyProfile = async (user: IAuthUser) => {
   const userInfo = await prisma.user.findUniqueOrThrow({
     where: {
-      email: user.email,
+      email: user?.email,
       status: UserStatus.ACTIVE,
     },
     select: {
@@ -228,10 +229,10 @@ const getMyProfile = async (user) => {
   return { ...userInfo, ...profielInfo };
 };
 
-const updateMyProfile = async (user: any, req: Request) => {
+const updateMyProfile = async (user: IAuthUser, req: Request) => {
   const userInfo = await prisma.user.findUniqueOrThrow({
     where: {
-      email: user.email,
+      email: user?.email,
       status: UserStatus.ACTIVE,
     },
   });
@@ -239,7 +240,7 @@ const updateMyProfile = async (user: any, req: Request) => {
   const file = req.file as IFile;
   if (file) {
     const updateToCloudinary = await fileUploder.uploadToCloudinary(file);
-    req.body.profilePhoto=updateToCloudinary?.secure_url
+    req.body.profilePhoto = updateToCloudinary?.secure_url;
   }
 
   let profielInfo;

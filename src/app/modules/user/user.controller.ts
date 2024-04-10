@@ -5,6 +5,7 @@ import SendResponse from "../../../shared/sendResponse";
 import httpStatus from "http-status";
 import pick from "../../../shared/paick";
 import { userFilterableFields } from "./user.constant";
+import { IAuthUser } from "../../interfaces/common";
 
 const creatAdmin = catchAsync(async (req: Request, res: Response) => {
   const result = await userServices.creatAdmin(req);
@@ -62,34 +63,33 @@ const changeProfileStatus = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-const getMyProfile = catchAsync(async (req: Request, res: Response) => {
-  const user = req.user;
-  const result = await userServices.getMyProfile(user);
+const getMyProfile = catchAsync(
+  async (req: Request & { user?: IAuthUser }, res: Response) => {
+    const user = req.user;
+    const result = await userServices.getMyProfile(user as IAuthUser);
 
-  SendResponse(res, {
-    statusCode: httpStatus.OK,
-    success: true,
-    message: "My Profile data fatched!",
-    data: result,
-  });
-});
+    SendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: "My Profile data fatched!",
+      data: result,
+    });
+  }
+);
 
+const updateMyProfile = catchAsync(
+  async (req: Request & { user?: IAuthUser }, res: Response) => {
+    const user = req.user;
+    const result = await userServices.updateMyProfile(user as IAuthUser, req);
 
-const updateMyProfile = catchAsync(async (req: Request, res: Response) => {
-  const user = req.user;
-  const result = await userServices.updateMyProfile(user, req);
-
-  SendResponse(res, {
-    statusCode: httpStatus.OK,
-    success: true,
-    message: "My Profile Updated!",
-    data: result,
-  });
-});
-
-
-
-
+    SendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: "My Profile Updated!",
+      data: result,
+    });
+  }
+);
 
 export const userController = {
   creatAdmin,
@@ -98,5 +98,5 @@ export const userController = {
   getAllFormDB,
   changeProfileStatus,
   getMyProfile,
-  updateMyProfile
+  updateMyProfile,
 };
