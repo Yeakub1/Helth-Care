@@ -1,20 +1,19 @@
 import httpStatus from "http-status";
 import { Request, RequestHandler, Response } from "express";
-import { AdminServices } from "./admin.services";
 import pick from "../../../shared/paick";
-import { adminFiltarableFields } from "./admin.constant";
 import SendResponse from "../../../shared/sendResponse";
 import catchAsync from "../../../shared/catchAsync";
-
+import { DoctorServices } from "./doctor.services";
+import { doctorFilterableFields } from "./doctor.constants";
 
 const getAllFormDB: RequestHandler = catchAsync(async (req, res) => {
-  const filter = pick(req.query, adminFiltarableFields);
+  const filter = pick(req.query, doctorFilterableFields);
   const options = pick(req.query, ["limit", "page", "sortBy", "sortOrder"]);
-  const result = await AdminServices.getAllFromDB(filter, options);
+  const result = await DoctorServices.getAllFromDB(filter, options);
   SendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: "Admin Data Fetched Successfully!",
+    message: "Doctor Data Fetched Successfully!",
     meta: result.meta,
     data: result.data,
   });
@@ -23,23 +22,24 @@ const getAllFormDB: RequestHandler = catchAsync(async (req, res) => {
 const getByIdFormDB = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
 
-  const result = await AdminServices.getByIdFormDB(id);
+  const result = await DoctorServices.getByIdFormDB(id);
   SendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: "Admin Data Fetched By Id!",
+    message: "Doctor Data Fetched By Id!",
     data: result,
   });
 });
 
 const updateIntoDB = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
-
-  const result = await AdminServices.updateIntoDB(id, req.body);
+  const payload = req.body;
+  const { ...doctorData } = payload;
+  const result = await DoctorServices.updateIntoDB(id, doctorData);
   SendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: "Admin Data Updated!",
+    message: "Doctor updated successfully",
     data: result,
   });
 });
@@ -47,11 +47,11 @@ const updateIntoDB = catchAsync(async (req: Request, res: Response) => {
 const deleteFormDB = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
 
-  const result = await AdminServices.deleteFormDB(id);
+  const result = await DoctorServices.deleteFormDB(id);
   SendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: "Admin Data Delete Successfuly!",
+    message: "Doctor Data Delete Successfuly!",
     data: result,
   });
 });
@@ -59,16 +59,16 @@ const deleteFormDB = catchAsync(async (req: Request, res: Response) => {
 const softDeleteFormDB = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
 
-  const result = await AdminServices.softDeleteFormDB(id);
+  const result = await DoctorServices.softDeleteFormDB(id);
   SendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: "Admin Soft Data Delete Successfuly!",
+    message: "Doctor Soft Data Delete Successfuly!",
     data: result,
   });
 });
 
-export const AdminController = {
+export const DoctorController = {
   getAllFormDB,
   getByIdFormDB,
   updateIntoDB,
