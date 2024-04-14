@@ -1,12 +1,12 @@
+import httpStatus from "http-status";
 import { Doctor, Prisma, UserStatus } from "@prisma/client";
 import { paginatinHelpers } from "../../../helpers/paginatinHelpers";
 import prisma from "../../../shared/prism";
-import { doctorSearchableFields } from "./doctor.constants";
-import { IDoctorFilterRequest, IDoctorUpdate, ISpecialties } from "./doctor.interface";
-import { IPaginationOptions } from "../../interfaces/paginations";
 import ApiError from "../../errors/ApiError";
-import httpStatus from "http-status";
 import { asyncForEach } from "../../../shared/utils";
+import { doctorSearchableFields } from "./doctor.constants";
+import { IPaginationOptions } from "../../interfaces/paginations";
+import { IDoctorFilterRequest, IDoctorUpdate, ISpecialties } from "./doctor.interface";
 
 const getAllFromDB = async (
   params: IDoctorFilterRequest,
