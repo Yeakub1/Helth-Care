@@ -109,6 +109,7 @@ const updateIntoDB = async (
     if (!result) {
       throw new ApiError(httpStatus.BAD_REQUEST, "Unable to update Patient");
     }
+    console.log(patientHelthData);
     if (result?.patientHelthData && patientHelthData) {
       const updateHelthData = await transactionClient.patientHelthData.update({
         where: {
