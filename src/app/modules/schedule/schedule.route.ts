@@ -1,6 +1,6 @@
 import express from "express";
 import validateRequest from "../../middlewares/validateRequest";
-import { ScheduleValidation } from "./schedule.validations";
+import { ScheduleValidation } from "./schedule.validationss";
 import { ScheduleController } from "./schedule.controller";
 import auth from "../../middlewares/auth";
 import { UserRole } from "@prisma/client";
